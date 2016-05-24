@@ -2,7 +2,7 @@
 
 clear all;
 quadrotor = QuadRotor;
-quadrotor.x(7:9) = [0.0; 0; 0.14];
+quadrotor.x(7:9) = [0.0; 0; 0];
 
 % Simulation times, in seconds.
 start_time = 0;
@@ -31,11 +31,11 @@ T = [zeros(2,4); k*ones(1,4); L*k, 0, -L*k, 0; 0, L*k, 0, -k*L; b, -b, b, -b];
 prev_error = zeros(6,1);
 
 % Step through the simulation, updating the state.
-for t = times(1)
+for t = times
 	
 	fprintf('###########\n');
 	fprintf('Iteration %d\n', t/dt);
-fprintf('###########\n');
+	fprintf('###########\n');
 	
 	
 	error(1:3, :) = r(1:3) - quadrotor.x(1:3);
