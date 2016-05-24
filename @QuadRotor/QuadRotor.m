@@ -22,7 +22,7 @@ classdef QuadRotor
 	methods (Access = protected)
 		function dx=dynamics(quadrotor,X)
 			
-			x = X(1:3);
+			x_ = X(1:3);
 			xdot = X(4:6);
 			theta = X(7:9);
 			thetadot = X(10:12);
@@ -37,9 +37,9 @@ classdef QuadRotor
 			thetadot = omega2thetadot(omega, theta);
 			theta = theta + quadrotor.dt * thetadot;
 			xdot = xdot + quadrotor.dt * a;
-			x = x + quadrotor.dt * xdot;
+			x_ = x_ + quadrotor.dt * xdot;
 			
-			dx = [x;xdot;theta;thetadot];
+			dx = [x_;xdot;theta;thetadot];
 			
 		end
 		

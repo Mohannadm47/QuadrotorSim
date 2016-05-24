@@ -1,3 +1,8 @@
 function theta_dot = omega2thetadot (omega, angles)
-theta_dot = [1, 0, -sin(angles(2)); 0, cos(angles(1)), cos(angles(2))*sin(angles(1)); 0, -sin(angles(1)), cos(angles(1))*cos(angles(2))]' * omega;
+psi = angles(1);
+theta = angles(2);
+phi = angles(3);
+theta_dot = [1, sin(phi)*sin(theta)/cos(theta),  cos(phi)*sin(theta)/cos(theta); 
+	           0, cos(theta),                     -sin(phi);
+	           0, sin(phi)/cos(theta),             cos(phi)/cos(theta)] * omega;
 end

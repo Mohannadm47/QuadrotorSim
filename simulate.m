@@ -2,6 +2,7 @@
 
 clear all;
 quadrotor = QuadRotor;
+quadrotor.x(7:9) = [0.0; 0; 0.14];
 
 % Simulation times, in seconds.
 start_time = 0;
@@ -20,36 +21,43 @@ x = quadrotor.x;
 %deviation = 100;
 %thetadot = deg2rad(2 * deviation * rand(3, 1) - deviation);
 index = 1;
-r = 7;
+r = [0; 0; 35; 0; 0; 0];
+
+k = quadrotor.k;
+b = quadrotor.b;
+L = quadrotor.L;
+T = [zeros(2,4); k*ones(1,4); L*k, 0, -L*k, 0; 0, L*k, 0, -k*L; b, -b, b, -b];
+
+prev_error = zeros(6,1);
 
 % Step through the simulation, updating the state.
-for t = times
+for t = times(1)
 	
-	error = r - quadrotor.x(3,1);
+	fprintf('###########\n');
+	fprintf('Iteration %d\n', t/dt);
+fprintf('###########\n');
 	
-	if(error < 0)
-		error = 0;
-	end
 	
-	'help1'
-	all_x (:,index) = quadrotor.x(1:3);
-	'help2'
+	error(1:3, :) = r(1:3) - quadrotor.x(1:3);
+	fprintf('Rotation Error:\n');
+	error(4:6, :) = R_err(rotation(quadrotor.x(7:9)'), rotation(r(4:6)'))
+	angles = quadrotor.x(7:9)
+	%error = r - quadrotor.x(3,1);
 	
-	quadrotor.u = ones(4,1)*error*15;
+	R = [rotation(quadrotor.x(7:9)'), zeros(3); zeros(3), rotation(quadrotor.x(7:9)')];
+
+	pinv(T)*R'*error*10
+	quadrotor.u = pinv(T)*R'*error*10;
+	
+	all_x (:,index) = quadrotor.x;
+	
+	%quadrotor.u = ones(4,1)*error*15;
 	
 	quadrotor.x = quadrotor.step;
+	prev_error = error;
 
-% 	omega = thetadot2omega(thetadot, theta);
-%   Compute linear and angular accelerations.
-% 	a = acceleration(i, theta, xdot, m, g, k, kd);
-% 	omegadot = angular_acceleration(i, omega, I, L, b, k);
-% 	
-% 	omega = omega + dt * omegadot;
-% 	thetadot = omega2thetadot(omega, theta);
-% 	theta = theta + dt * thetadot;
-% 	xdot = xdot + dt * a;
-% 	x = x + dt * xdot;
 	index = index + 1;
 end
 
 plot(all_x(3,:));
+all_x(:, end)
