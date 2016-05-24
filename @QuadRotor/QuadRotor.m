@@ -40,6 +40,8 @@ classdef QuadRotor
 			x_ = x_ + quadrotor.dt * xdot;
 			
 			dx = [x_;xdot;theta;thetadot];
+            
+%             anglesdots = [theta,thetadot,omega,omegadot]
 			
 		end
 		
