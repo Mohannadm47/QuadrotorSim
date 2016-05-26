@@ -38,6 +38,9 @@ classdef QuadRotor
 			theta = theta + quadrotor.dt * thetadot;
 			xdot = xdot + quadrotor.dt * a;
 			x_ = x_ + quadrotor.dt * xdot;
+            
+            
+            theta = -pi + mod(theta + pi,2*pi)
 			
 			dx = [x_;xdot;theta;thetadot];
             

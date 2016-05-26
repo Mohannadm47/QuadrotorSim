@@ -5,7 +5,9 @@ format short;
 quadrotor = QuadRotor;
 quadrotor.x(1:3) = [0.0; 0.0; 10.0];
 quadrotor.x(4:6) = [0.1; 0.0; 1];
+
 quadrotor.x(7:9) = [0; 0; 0];
+quadrotor.x(10:12) = [0; 0; pi];
 
 % Simulation times, in seconds.
 start_time = 0;
@@ -22,19 +24,8 @@ x = quadrotor.x;
 % Generate a trajectory.
 r_i = [quadrotor.x(1:3); quadrotor.x(7:9)];
 r_f = [10.0; 10.0; 15.0; 0;0;0];
-v_i = [0.0; 0.0; 0.0; 0.0; 0.0; 0.0];
-v_f = [0.0; 0.0; 0.0; 0.0; 0.0; 0.0];
-
-% x = bsxfun(@plus,R_v*[ones(size(t))*force_d/fK;cos(t*tx)*r;sin(t*tx)*r],startPos - r*[0,1,0]');d
-
-
-% Pole placement
-% A = [zeros(6), eye(6); zeros(6), zeros(6)];
-% B = [zeros(6,6); eye(6,6)];
-% lambda = [-2, -4, -5, -7, -10, -15, -20, -25, -27, -30, -35, -40];
-% K = place(A, B, lambda);
-% Kp = K(:,1:6);
-% Kd = K(:,7:12);
+v_i = [0.0; 0.0; 0.0; 0.0; 0.0; 0];
+v_f = [0.0; 0.0; 0.0; 0.0; 0.0; 0];
 
 Kp = 10;
 Kd = 1;
@@ -52,9 +43,13 @@ p(:,1:3) = bsxfun(@plus,[0.1*t;cos(t*tx)*r;sin(t*tx)*r], quadrotor.x(1:3) - [0;r
 v(:,1:3) = [0.1*ones(size(t));-tx*sin(t*tx)*r;tx*cos(t*tx)*r]';
 a(:,1:3) = [zeros(size(t));-tx^2*cos(t*tx)*r;-tx^2*sin(t*tx)*r]';
 
+v(:,6) = ones(size(v(:,6)))*pi/4;
+p(:,6) = t*pi/4;
+
 quadrotor.x(1:3) = p(1,1:3);
 quadrotor.x(4:6) = v(1,1:3);
-quadrotor.x(7:9) = [0; 0; 0];
+quadrotor.x(7:9) = p(1,4:6);
+quadrotor.x(10:12) = v(1,4:6);
 
 m = quadrotor.m;
 k = quadrotor.k;
@@ -69,7 +64,7 @@ error_dot = zeros(6,1);
 F = zeros(6,1);
 
 M = [m*eye(3), zeros(3); zeros(3), I];
-g = m*quadrotor.g;
+g = quadrotor.g;
 G = [0;0;g;0;0;0];
 % G = [0;0;0;0;0;0];
 
@@ -91,23 +86,24 @@ for i = 1:length(times)
 	error_dot(1:3) = (v(i,1:3)' - current_v);
     F = zeros(6,1);
     
-    F(3) = M(3,3)*(error(3)*Kp + error_dot(3)*Kd + g + a(i,3) + quadrotor.x(6)*quadrotor.kd);
-    F(1:3) = F(1:3)'*R;
+    F(3) = M(3,3)*(error(3)*Kp + error_dot(3)*Kd + g + a(i,3) + quadrotor.x(6)*quadrotor.kd)/(cos(current_theta(1))*cos(current_theta(2)));
+%     F(1:3) = F(1:3)'*R;
 
-    r_rotation = [-1*(error(2)*Kp2 + error_dot(2)*Kd2 + a(i,2) + quadrotor.x(5)*quadrotor.kd), error(1)*Kp2 + error_dot(1)*Kd2 + a(i,1) + quadrotor.x(4)*quadrotor.kd,p(i,6)]./[F(3),F(3),1];
+    r_rotation = [-1*(error(2)*Kp2 + error_dot(2)*Kd2 + a(i,2) + quadrotor.x(5)*quadrotor.kd), error(1)*Kp2 + error_dot(1)*Kd2 + a(i,1) + quadrotor.x(4)*quadrotor.kd,p(i,6)]./[F(3)/m,F(3)/m,1];
     
 
     error(4:6) = R_err(rotation(current_theta'), rotation(r_rotation));
 	error_dot(4:6) = v(i,4:6)' - current_thetadot;
 	
 	error_mag(i) = error'*error;
-%     error_mag(i) = error(3);
-
+%     error_mag(i) = error(2);
 %     error'
+%     current_theta
+
     F(4:6) = M(4:6,4:6)*(a(i,4:6)' + error(4:6)*Kp + error_dot(4:6)*Kd) + S(4:6);
 
 	
-    reshape(quadrotor.x,3,4);
+%     reshape(quadrotor.x,3,4)
     
 	u = inv(T)*F(3:6);
 % 	u(u<0) = 0.0;
