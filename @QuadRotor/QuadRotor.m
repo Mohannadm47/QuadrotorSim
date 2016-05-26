@@ -30,7 +30,7 @@ classdef QuadRotor
 			omega = thetadot2omega(thetadot, theta);
 			
 			% Compute linear and angular accelerations.
-			a = acceleration(quadrotor.u, theta, xdot, quadrotor.m, quadrotor.g, quadrotor.k, quadrotor.kd)
+			a = acceleration(quadrotor.u, theta, xdot, quadrotor.m, quadrotor.g, quadrotor.k, quadrotor.kd);
 			omegadot = angular_acceleration(quadrotor.u, omega, quadrotor.I, quadrotor.L, quadrotor.b, quadrotor.k);
 			
 			omega = omega + quadrotor.dt * omegadot;
