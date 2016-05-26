@@ -6,7 +6,7 @@ quadrotor.k = 1;
 quadrotor.I = eye(3);
 quadrotor.m = 1;
 quadrotor.g = 9.81;
-quadrotor.kd = 10;
+quadrotor.kd = 0.1;
 quadrotor.dt = 0.005;
 
 quadrotor.x = zeros(12,1);
