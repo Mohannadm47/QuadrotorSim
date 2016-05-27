@@ -3,5 +3,5 @@ function a = acceleration(inputs, angles, xdot, m, g, k, kd)
     R = rotation(angles);
     T = R * thrust(inputs, k);
     Fd = -kd * xdot;
-    a = gravity + 1 / m * T + Fd;
+    a = gravity + (T + Fd)/m;
 end
