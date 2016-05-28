@@ -6,6 +6,7 @@
 
 \usepackage[small,hang]{caption2}
 \usepackage{graphicx}
+\usepackage{bbold}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{hyperref}
@@ -167,9 +168,9 @@ $$ \mbm{\tau_B} = \begin{bmatrix} L (k\omega_1^2 - k\omega_3^2)\\ L
 
 The linear dynamics of the quadrotor system can be described by the
 following equation:
-
-$$ m \mbm{\ddot{x}} = \mbm{G} + \mbm{^BR_IT_{B}} + \mbm{F_{drag}} $$
-
+\begin{equation} \label{eom_linear}
+$$ m \mbm{\ddot{x}} = \mbm{G} + \mbm{^BR_IT_{B}} + \mbm{F_{D}} $$
+\end{equation}
 where, 
 
 $$ \mbm{G} = \begin{bmatrix} 0 \\ 0 \\ -mg \end{bmatrix} $$
@@ -191,22 +192,104 @@ C_\phi C_\theta \end{bmatrix} $$
 The rotational dynamics are given by Euler's equations for rigid body
 dynamics. It
 
-$$ \mbm{I\dot{\omega}} + \mbm{\omega} \times (\mbm{I\omega}) $$
-
+\begin{equation} \label{eom_rotational}
+\mbm{\tau_B} = \mbm{J\dot{\omega}} + \mbm{\omega} \times (\mbm{J\omega})
+\end{equation}
 Note that here $\mbm{\omega}$ denotes the angular velocity of the
-quadcopter in the body-frame. 
-
-
+quadcopter in the body-frame and $\mbm{J}$ is the inetria matrix (to
+avoid confusion with matrix identity).
 
 \section{Approach}
+This section describes the approach used to design our controller.
+
+First, let us consider the abstract equation of motion below:
+
+\begin{equation} \label{eom_abstract}
+$$ \mbm{F} = \mbm{M}\mbm{\ddot{x}} + \mbm{S} -\mbm{G} - \mbm{F_D} $$
+\end{equation}
+
+From equations \ref{eom_linear} and \ref{eom_rotational}, we can form
+the equation above. In this case, the $\mbm{M}$ is the Mass-Inertia
+matrix, 
+
+$$ \mbm{M} = \begin{bmatrix} m\mbm{I} && \mathbb{O}\\ \mathbb{0}&&
+  \mbm{J}\end{bmatrix} $$
+
+$$ \mbm{S} = \begin{bmatrix} \mathbb{0}_{3\times1} \\ \mbm{\omega} \times
+  (\mbm{J\omega}) \end{bmatrix} $$
+
+$$ \mbm{G} = \begin{bmatrix} 0 \\ 0\\ -mg\\ 0\\ 0\\ 0 \end{bmatrix} $$
+
+$$ \mbm{F_D} = \begin{bmatrix} -k_d \mbm{\dot{x}}\\
+  \mathbb{0}_{3\times1} \end{bmatrix} $$
+
+Three first three rows of $\mbm{\ddot{x}}$ denote the second derivative of
+position and the last three rows denote the second derivative of the
+Euler angles representing the rotation of the quadcoptor.\\
+
+Using feedback linearization we develop our inverse dynamics
+controller for the quadrotor. We first define an output we want to
+control. In this case, it is the error in position.
+
+\begin{equation} \label{y}
+$$ \mbm{y} = \mbm{p_r} - \mbm{p_c} $$ 
+\end{equation}
+
+where $\mbm{p_r}$ is the reference position and $\mbm{p_c}$ is the current
+position.
+
+Consequently, we can define the first and second derivatives (where
+$v_r$, $v_c$, $a_r$ and $a_c$ is reference velocity, current velocity,
+reference acceleration and current acceleration respectively) as,
+
+\begin{equation} \label{ydot}
+$$ \mbm{\dot{y}} = \mbm{v_r} - \mbm{v_c} $$
+\end{equation}
+
+\begin{equation} \label{accel}
+$$ \mbm{\ddot{y}} = \mbm{a_r} - \mbm{a_c} $$
+\end{equation}
+
+For convenience we choose $\mbm{\ddot{y}} = \mbm{u}$. Thus, we have
+the following equations for the dynamics of $\mbm{y}$.
+
+\begin{equation} \label{y_dynamics}
+$$ \begin{bmatrix} \mbm{\dot{y}} \\ \mbm{\ddot{y}} \end{bmatrix}
+= \begin{bmatrix} \mathbb{0} && \mbm{I} \\ \mathbb{0} &&
+  \mathbb{0} \end{bmatrix} \begin{bmatrix} \mbm{y} \\
+  \mbm{\dot{y}}\end{bmatrix} + \begin{bmatrix} \mathbb{0}  \\
+  \mbm{I} \end{bmatrix} \mbm{u}$$
+\end{equation}
+
+\begin{equation} \label{statefeedback}
+$$ \mbm{u} = -\mbm{K_p}\mbm{y} - \mbm{K_d}\mbm{\dot{y}} $$
+\end{equation}
+
+These equations can guarantee stability if we select $\mbm{K_p}$ and
+$\mbm{K_d}$ using pole placement.\\
+
+From equations \ref{accel} and \ref{statefeedback}, we have
+
+$$ \mbm{\ddot{x}} = \mbm{a_c} = \mbm{a_r} + \mbm{K_p}\mbm{y} +
+\mbm{K_d}\mbm{\dot{y}} $$
+
+Plugging this into equation \ref{eom_abstract}, we have,
+\begin{equation} \label{eom_id}
+$$ \mbm{F} = \mbm{M}(\mbm{a_r} + \mbm{K_p}\mbm{y} +
+\mbm{K_d}\mbm{\dot{y}}) + \mbm{S} -\mbm{G} - \mbm{F_D} $$
+\end{equation}
+
+And this equation forms the basis of our Inverse Dynamics
+controller. We simply plug in the desired acceleration, velocity error
+(from equation \ref{ydot}) and position error (from
+equation \ref{y}) into the above equation to obtain the the required
+forces and torques. This can then be used to control the angular
+speeds of the motors to achieve a given trajectory. 
+
 
 \section{Results}
 
 \section{Conclusion}
-
-  \textbf{Answer}: $$ \mbm{M} = \begin{bmatrix}1&&0&&0&&0 \\
-    0&&0.5&&0&&0 \\ 0&&0&&1&&0 \\ 0&&0&&0&&1 \end{bmatrix} $$ \\ such
-  that, $\mbm{MA}$ gives the required result.   
 
 \addcontentsline{toc}{section}{References}
 
