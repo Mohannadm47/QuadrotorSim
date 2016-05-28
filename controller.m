@@ -1,6 +1,7 @@
 %% Quadrotor.
 
 clear all;
+close all;
 format short;
 
 
@@ -20,11 +21,11 @@ G = [0;0;g;0;0;0];
 quadrotor.x(1:3) = [0.0; 0.0; 10.0];
 quadrotor.x(4:6) = [0; 0; 0];
 quadrotor.x(7:9) = [0.0; 0; 0];
-quadrotor.x(10:12) = [0; 0; pi];
+quadrotor.x(10:12) = [pi/4; 0.0; 0.0];
 
 % Simulation times, in seconds.
 start_time = 0;
-end_time = 100;
+end_time = 10;
 dt = quadrotor.dt;
 times = start_time:dt:end_time;
 
@@ -139,7 +140,7 @@ for i = 1:length(times)
 	
 %     reshape(quadrotor.x,3,4)
     
-	u = inv(T)*F(3:6);
+	u = inv(T)*F(3:6)
 % 	u(u<0) = 0.0;
 	
 	quadrotor.u = u;
@@ -147,7 +148,7 @@ for i = 1:length(times)
 	all_x (:,i) = quadrotor.x;
 
 	
-	 if mod(i,10) == 0
+	 if mod(i,100) == 0
         cla
         line = eye(3)*rotation(quadrotor.x(7:9));
         for j = 1:3
