@@ -2,7 +2,7 @@
 \usepackage{etex}
 \usetheme{Orebro}
 
-\newcommand{\lectureTitle}{{\rm \LaTeX{}} Template for Reading Assignment}
+\newcommand{\lectureTitle}{Quadcopter Stabilization and Tracking}
 
 %\addtolength{\bodyheight}{-2mm} 
 %If you think \bodyheight is too tall, you can adjust it like this.
@@ -207,9 +207,9 @@
 }
 
 % ===========================================================================
-\title{Planning \& Scheduling, DT4047}
+\title{Robot Control Project}
 \subtitle{\lectureTitle{}}
-\author[F.~Pecora]{Author Names\\\url{my@email.com, your@email.com}\\\vspace{0.2cm}School of Science and Technology\\\vspace{0.1cm}\"Orebro University, Sweden}
+\author[Chittaranjan Srinivas Swaminathan and Anders Wikstr\"{o}m]{Chittaranjan S Srinivas and Anders Wikstr\"{o}m\\\url{chitt@live.in}\\\url{anders.wikstrom.88@gmail.com}\\\vspace{0.2cm}School of Science and Technology\\\vspace{0.1cm}\"Orebro University, Sweden}
 
 \date{\centering
 \vspace{1cm}
@@ -223,7 +223,7 @@
     {
         %\vspace{1.3cm}
         \begin{center}
-        \includegraphics[width=\linewidth]{fig/book.png}
+        \includegraphics[width=\linewidth]{quadrotor.jpg}
         \end{center}
       %WITH FUNDER LOGO(S)
       %WITH CONTRIBUTORS
@@ -258,131 +258,36 @@
 \begin{document}
 \maketitle
 
-%%%%%%%%%%%%%%%%%%
-%% Course intro %%
-%%%%%%%%%%%%%%%%%%
+\section{Outline and Introduction}
 
-\section{Reading Assignment}
+\frame{
+  \frametitle{Introduction}
+  
+\textbf{Goal}: Build a stability and tracking controller for a quadcopter.
+\begin{itemize}
+\item Stability: maintain orientation and hover at a particular altitude.
+\item Tracking: follow trajectories given.
+\end{itemize}
+\textbf{Subgoal}: Build a simulator for the quadrotor in matlab.
+\textbf{Result}: Built an inverse dynamics controller that can
+stabilize the quadcopter and track paths.
+}
 
-
-% \frame{\frametitle{Course Literature: Books}
-
-% \begin{tabular}{rl}
-% \begin{minipage}{0.08\textwidth}\includegraphics[width=\textwidth]{newfig/gnt-cover.jpg}\end{minipage} & \begin{minipage}{0.85\textwidth}{\footnotesize M.~Ghallab, D.~Nau and P.~Traverso. ``Automated Planning: Theory and Practice'', Elsevier, 2004}\end{minipage}\\
-% $\;\;$ & \\
-% \begin{minipage}{0.08\textwidth}\includegraphics[width=\textwidth]{newfig/slv-cover.jpg}\end{minipage} & \begin{minipage}{0.85\textwidth}{\footnotesize S.~LaValle. ``Planning Algorithms'', Cambridge university press, 2006}\end{minipage}\\
-% $\;\;$ & \\
-% \begin{minipage}{0.08\textwidth}\includegraphics[width=\textwidth]{newfig/rn-cover.jpg}\end{minipage} & \begin{minipage}{0.85\textwidth}{\darkgray{\footnotesize S.J.~Russell, P.~Norvig. ``Artificial Intelligence: a Modern Approach'' (third edition), Pearson Publishing, 2010}}\end{minipage}\\
-% $\;\;$ & \\
-% \begin{minipage}{0.08\textwidth}\includegraphics[width=\textwidth]{newfig/cp-cover.jpg}\end{minipage} & \begin{minipage}{0.85\textwidth}{\darkgray{\footnotesize R. Dechter. ``Constraint Processing'', Morgan Kaufmann, 2003}}\end{minipage}
-% \end{tabular}
-% }
-
-
-\frame{\frametitle{Reading Assignment --- Action Planning}
-
-Action planning
+\frame{
+\frametitle{Outline}
 \vspace{0.5cm}
-%\nocite{Korf:2010:AIS:1882723.1882745,gent-walsh-99-tech-rep,chaff-01,ks-96}
-%\nocite{blum-furst-gp,ks-96,bb-99,geffner-bonet-hsp,cestaOddiSmithJOH02,lavalle1998r,Likhachev:2009:PLD:1577179.1577184,Karaman.Frazzoli:IJRR11,pecora2012mission,fikes-nilsson-71-STRIPS,Hoffmann:2001:FPS:1622394.1622404}
+{
 
-{\fontsize{6}{2}\selectfont
-
-\begin{thebibliography}{}
-
-\bibitem[Hoffmann and Nebel, 2001]{Hoffmann:2001:FPS:1622394.1622404}
-Hoffmann, J. and Nebel, B. (2001).
-\newblock The FF planning system: Fast plan generation through heuristic
-  search.
-\newblock {\em J. Artif. Int. Res.}, 14(1):253--302.
-
-\bibitem[Fikes and Nilsson, 1971]{fikes-nilsson-71-STRIPS}
-Fikes, R.~E. and Nilsson, N.~J. (1971).
-\newblock {STRIPS: A new approach to theorem proving in problem solving}.
-\newblock {\em {Artificial Intelligence}}, 2:189--208.
-
-\bibitem[Blum and Furst, 1997]{blum-furst-gp}
-Blum, A. and Furst, M. (1997).
-\newblock {Fast Planning Through Planning Graph Analysis}.
-\newblock {\em Artificial Intelligence}, pages 281--300.
-
-\bibitem[Bonet and Geffner, 2001]{geffner-bonet-hsp}
-Bonet, B. and Geffner, H. (2001).
-\newblock {Planning as heuristic search}.
-\newblock {\em Artificial Intelligence}, 129(1--2):5--33.
-
-% \bibitem[Kautz et~al., 1996]{ks-96}
-% Kautz, H., McAllester, D., and Selman, B. (1996).
-% \newblock {Encoding Plans in Propositional Logic}.
-% \newblock In {\em {Proceedings of the Fifth International Conference on
-%   Principles of Knowledge Representation and Reasoning (KR-96)}}.
-
-\bibitem[Kautz and Selman, 1999]{bb-99}
-Kautz, H. and Selman, B. (1999).
-\newblock {Unifying SAT-based and Graph-based Planning}.
-\newblock In {\em Proceedings of IJCAI-99}.
-
-\end{thebibliography}
-}
+\begin{itemize}
+\item Introduction
+\item Key concepts
+\item Controller design
+\item Results
+\end{itemize}
+%% this can be used to select a different font.
+%%\fontsize{6}{2}\selectfont
 
 }
-
-
-% \frame{\frametitle{Course Literature: Scientific Articles}
-
-% Motion planning
-% \vspace{0.5cm}
-
-% {\fontsize{6}{2}\selectfont
-
-% \begin{thebibliography}{}
-
-% \bibitem[Karaman and Frazzoli, 2011]{Karaman.Frazzoli:IJRR11}
-% Karaman, S. and Frazzoli, E. (2011).
-% \newblock Sampling-based algorithms for optimal motion planning.
-% \newblock {\em International Journal of Robotics Research}, 30(7):846--894.
-
-% \bibitem[LaValle, 1998]{lavalle1998r}
-% LaValle, S.~M. (1998).
-% \newblock {Rapidly-exploring random trees: A new tool for path planning}.
-% \newblock Technical report, Computer Science Dept., Iowa State University.
-
-% \bibitem[Likhachev and Ferguson, 2009]{Likhachev:2009:PLD:1577179.1577184}
-% Likhachev, M. and Ferguson, D. (2009).
-% \newblock Planning long dynamically feasible maneuvers for autonomous vehicles.
-% \newblock {\em Int. J. Rob. Res.}, 28(8):933--945.
-
-% \end{thebibliography}
-% }
-
-% }
-
-% \addtocounter{framenumber}{-1}
-% \frame{\frametitle{Course Literature: Scientific Articles}
-
-% Scheduling and its integration with planning
-% \vspace{0.5cm}
-
-% {\fontsize{6}{2}\selectfont
-
-% \begin{thebibliography}{}
-
-% \bibitem[Cesta et~al., 2002]{cestaOddiSmithJOH02}
-% Cesta, A., Oddi, A., and Smith, S.~F. (2002).
-% \newblock A constraint-based method for project scheduling with time windows.
-% \newblock {\em Journal of Heuristics}, 8(1):109--136.
-
-% \bibitem[Pecora et~al., 2012]{pecora2012mission}
-% Pecora, F., Cirillo, M., and Dimitrov, D. (2012).
-% \newblock On mission-dependent coordination of multiple vehicles under spatial
-%   and temporal constraints.
-% \newblock In {\em IEEE/RSJ International Conference on Intelligent Robots and
-%   Systems (IROS)}.
-
-% \end{thebibliography}
-% }
-
-% }
 
 \frame{
 \frametitle{Your Task}
