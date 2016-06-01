@@ -87,7 +87,7 @@ with an error magnitude less than $10^{-3}$.
 
 \section{Introduction}
 
-\section{Background}
+\section{Dynamics}
 In this section we describe the model of the quadcopter used in the
 simulation and control. The following subsections detail the different
 components of the dynamics.
@@ -131,6 +131,13 @@ $$ \mbm{F_D}= -k_d\mbm{\dot{x}}$$.
 Again from \cite{Andrew}, the torque due to individual motors is also
 proportional to the square of the angular velocity.
 
+\begin{figure}
+\centering
+\includegraphics[scale=0.8]{quadrotor.png}
+\caption{Quadrotor axes and rotor directions}
+\label{quadrotor}
+\end{figure}
+
 $$ \tau = b\ \omega^2 $$
 
 So the net torque in the z-axis of the body frame is,
@@ -143,7 +150,7 @@ $$ \tau_\psi = b\ (\omega_1^2 - \omega_2^2 + \omega_3^2 -
 The roll and pitch torques are simply due the difference in torques
 generated due to the thrust in the opposing motors. Let $L$ be the
 length of each arm of the quadcoptor and, if motors 1 and 3 are along
-the y-axis and motors 2 and 4 were along the x-axis, the torque along
+the y-axis and motors 2 and 4 were along the x-axis (see fig. \ref{quadrotor}), the torque along
 the x-axis is given by,
 
 \begin{equation} \label{tauphi}
@@ -178,9 +185,10 @@ $$ \mbm{G} = \begin{bmatrix} 0 \\ 0 \\ -mg \end{bmatrix} $$
 and,\\ 
 
 $ \mbm{^BR_I} $ is the rotation matrix from the inertial frame to the
-body frame. Thus, any vector pre-multiplied by the matrix is
-rotated to the inertial frame.
+body frame. Thus, any vector pre-multiplied by this matrix is
+rotated to the inertial frame. \footnote{Here, $C_x$ denotes cosine(x) and $S_x$ denotes sine(x).}
 
+\begin{equation} \label{rotation_matrix}
 $$ \mbm{^BR_I} = \begin{bmatrix} C_\theta C_\psi && -C_\theta S_\psi && S_\theta\\
 C_\phi S_\psi + C_\psi S_\phi S_\theta&& C_\phi C_\psi - S_\phi
 S_\theta S_\psi&& -C_\theta S_\phi\\
@@ -188,6 +196,7 @@ S_\phi S_\psi - C_\phi C_\psi S_\theta&&
 C_\psi S_\phi + C_\phi S_\theta S_\psi&&
 C_\phi C_\theta \end{bmatrix} $$
 \\
+\end{equation}
 
 The rotational dynamics are given by Euler's equations for rigid body
 dynamics. It
@@ -197,13 +206,20 @@ dynamics. It
 \end{equation}
 Note that here $\mbm{\omega}$ denotes the angular velocity of the
 quadcopter in the body-frame and $\mbm{J}$ is the inetria matrix (to
-avoid confusion with matrix identity).
+avoid confusion with matrix identity).\\
 
-\section{Approach}
+Another important matrix is the matrix relating the angular velocity, $\mbm{\omega}$, to the time derivative of the Euler angles, $\mbm{\dot{\theta}}$ \cite{Andrew}.
+
+$$ \mbm{Q} = \begin{bmatrix} 1 && 0 && -S_{\theta} \\
+0 && C_\phi && S_\phi C_\theta \\ 0 && -S_\phi && C_\phi C_\theta \end{bmatrix} $$
+
+$$ \mbm{\omega} = \mbm{Q} \mbm{\dot{\theta}} $$
+
+\section{Controller Design}
 This section describes the approach used to design our controller.
 
+\subsection{Inverse Dynamics formulation}
 First, let us consider the abstract equation of motion below:
-
 \begin{equation} \label{eom_abstract}
 $$ \mbm{F} = \mbm{M}\mbm{\ddot{x}} + \mbm{S} -\mbm{G} - \mbm{F_D} $$
 \end{equation}
@@ -284,11 +300,70 @@ controller. We simply plug in the desired acceleration, velocity error
 (from equation \ref{ydot}) and position error (from
 equation \ref{y}) into the above equation to obtain the the required
 forces and torques. This can then be used to control the angular
-speeds of the motors to achieve a given trajectory. 
+speeds of the motors to achieve a given trajectory. \\ 
 
-However, the quadcoptor is highly underactuated. Thus, it can only
-track trajectories that obey the dynamics strictly.
+\subsection{From forces to motor speeds}
 
+One more ingredient is the transformation relating the controller
+outputs to the angular speeds of the motors. We call this matrix,
+$\mbm{T}$. It is merely equations \ref{thrust} and \ref{tauvector} written in
+matrix form.
+
+\begin{equation} \label{force_to_omega}
+$$ \begin{bmatrix} f \\ \tau_\phi \\ \tau_\theta \\
+  \tau_\psi \end{bmatrix}  = \mbm{T} \begin{bmatrix} \omega_1^2 \\
+  \omega_2^2 \\ \omega_3^2 \\ \omega_4^2 \end{bmatrix}$$
+\end{equation}
+
+where, 
+
+$$ \mbm{T} = \begin{bmatrix}
+k && k && k && k \\ 
+Lk && 0 && -Lk && 0 \\
+0 && Lk && 0 && -Lk \\
+b && -b && b && -b \end{bmatrix} $$
+
+\subsection{Small angle approximation applied to the force equation}
+
+In order to be able to use equation \ref{eom_id} with equation
+\ref{force_to_omega}, we need to ensure that the required forces are
+in the body frame of the quadcopter. This can be done by rotating the
+forces using rotation matrix from equation
+\ref{rotation_matrix}. 
+
+$$ \mbm{T_B} = \mbm{^IR_B} \mbm{F} = \mbm{^BR_I}^{-1} \mbm{F} $$
+
+Ideally, if the trajectory obeys the dynamics, we have all we
+need. However, given an arbitrary trajectory, the controller would
+only successfully stabilize the quadcopter and achieve the reference
+altitude. This is because, the quadcoptor is highly underactuated. We
+have no means of 'asking' the controller to pitch or roll the quadcopter to
+achieve a certain force in y-direction or x-direction
+respectively.\\
+
+To overcome this, we approximate the rotation matrix
+around an operating point. We assume that $\theta$ and
+$\phi$ are very small. Thus the rotation matrix becomes,
+
+$$  \mbm{^BR_I} = \begin{bmatrix} 1 && -\psi && \theta \\ \psi && 1 && -\phi \\
+  -\theta && \phi && 1 \end{bmatrix} $$
+
+And hence, 
+
+$$ f_x  = \theta f_{th} $$
+$$ f_y = -\phi f_{th} $$
+
+where $f_x$ and $f_y$ are the first two components of $\mbm{F}$, and
+$f_{th}$ is the net thrust in the body frame (the third component of
+$\mbm{T_B}$).
+
+Thus, 
+
+$$ \theta = \frac{f_x}{f_{th}} $$
+$$ \phi = -\frac{f_y}{f_{th}} $$
+
+This forms the final component of our Inverse Dynamics controller to
+track any given path.
 
 \section{Results}
 
