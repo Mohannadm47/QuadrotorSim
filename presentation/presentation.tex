@@ -1,5 +1,11 @@
 \documentclass[compress]{beamer}
 \usepackage{etex}
+\usepackage{subfig}
+\usepackage{wrapfig}
+\usepackage{bbold}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
 \usetheme{Orebro}
 
 \newcommand{\lectureTitle}{Quadcopter Stabilization and Tracking}
@@ -263,13 +269,13 @@
 \frame{
   \frametitle{Introduction}
   
-\textbf{Goal}: Build a stability and tracking controller for a quadcopter.
+\dba{Goal}: Build a stability and tracking controller for a quadcopter.
 \begin{itemize}
 \item Stability: maintain orientation and hover at a particular altitude.
 \item Tracking: follow trajectories given.
 \end{itemize}
-\textbf{Subgoal}: Build a simulator for the quadrotor in matlab.
-\textbf{Result}: Built an inverse dynamics controller that can
+\dba{Subgoal}: Build a simulator for the quadrotor in matlab.\\
+\dba{Result}: Built an inverse dynamics controller that can
 stabilize the quadcopter and track paths.
 }
 
@@ -290,6 +296,127 @@ stabilize the quadcopter and track paths.
 }
 }
 
-\End{document}
+\section{Key concepts}
+\frame{
+  \frametitle{Forces from propellers}
+  \begin{tabular}{l r}
+   $ \dba{T_{B}} = k \begin{bmatrix}0 \\ 0\\ \sum
+      \limits_{i=1}^{4} \omega_i^2 \end{bmatrix} $
+& \onslide<1-> \includegraphics[scale=0.5]{../Report/quadrotor.png}\\
+  \end{tabular}
+}
+
+\frame{
+  \frametitle{Torques from propellers}
+  \begin{tabular}{l r}
+$ \tau_\theta = L (k\omega_2^2 - k\omega_4^2) $
+
+& \onslide<1-> \includegraphics[scale=0.5]{../Report/quadrotor.png}\\
+  \end{tabular}
+}
+
+\frame{
+  \frametitle{Torques from propellers}
+  \begin{tabular}{l r}
+$ \tau_\phi = L (k\omega_1^2 - k\omega_3^2) $
+
+& \onslide<1-> \includegraphics[scale=0.5]{../Report/quadrotor.png}\\
+  \end{tabular}
+}
+
+\frame{
+  \frametitle{Torques from propellers}
+  \begin{tabular}{l r}
+$ \tau_\psi = b\ (\omega_1^2 - \omega_2^2 + \omega_3^2 -
+\omega_4^2) $
+
+& \onslide<1-> \includegraphics[scale=0.5]{../Report/quadrotor.png}\\
+  \end{tabular}
+}
+
+\frame{
+  \frametitle{Equations of motion}
+  \begin{itemize}
+    \item Linear: $ m \mathbf{\frac{d^2x}{dt^2}} = \mathbf{G} + \mathbf{^BR_IT_{B}} +
+      \mathbf{F_{D}} $
+    \item Rotational: $\mathbf{\tau_B} = \mathbf{J\frac{d\omega}{dt}} + \mathbf{\omega} \times (\mathbf{J\omega})$
+
+  \end{itemize}
+}
+
+\section{Controller Design}
+
+\frame{
+  \frametitle{Inverse Dynamics formulation}
+ In matrix form ...
+    $$ \mathbf{F} = \mathbf{M}\mathbf{x''} + \mathbf{S} -\mathbf{G} - \mathbf{F_D} $$
+\begin{itemize}    
+\item $ \mathbf{M} = \begin{bmatrix} m\mathbf{I} && \mathbb{O}\\ \mathbb{0}&&
+  \mathbf{J}\end{bmatrix} $ and $ \mathbf{S} = \begin{bmatrix} \mathbb{0}_{3\times1} \\ \mathbf{\omega} \times (\mathbf{J\omega}) \end{bmatrix} $ \\
+
+\item $ \mathbf{G} = \begin{bmatrix} 0 \\ 0\\ -mg\\ 0\\ 0\\
+    0 \end{bmatrix} $ and $ \mathbf{F_D} = \begin{bmatrix} -k_d \mathbf{x'}\\
+  \mathbb{0}_{3\times1} \end{bmatrix} $
+\end{itemize}
+}
+
+\frame{
+  \frametitle{Inverse Dynamics Formulation}
+Forces in the world/inertial frame...
+$$ \mathbf{F} = \mathbf{M}(\mathbf{a_r} + \mathbf{K_p}\mathbf{e_p} +
+\mathbf{K_d}\mathbf{e_v}) + \mathbf{S} -\mathbf{G} - \mathbf{F_D} $$
+
+Where, 
+$$ \mathbf{u} = e'' = a_r - a_c =
+-\mathbf{K_p}\mathbf{e_p} - \mathbf{K_d}\mathbf{e_v} $$
+and
+
+$$ \begin{bmatrix} \mathbf{y'} \\ \mathbf{y''} \end{bmatrix}
+= \begin{bmatrix} \mathbb{0} && \mathbf{I} \\ \mathbb{0} &&
+  \mathbb{0} \end{bmatrix} \begin{bmatrix} \mathbf{y} \\
+  \mathbf{y'}\end{bmatrix} + \begin{bmatrix} \mathbb{0}  \\
+  \mathbf{I} \end{bmatrix} \mathbf{u}$$
+
+}
+
+\frame{
+  \frametitle{Small angle approximation - force equation}
+  We could reduce the Rotation matrix to ...
+  $$  \mbm{^BR_I} = \begin{bmatrix} 1 && -\psi && \theta \\ \psi && 1 && -\phi \\
+  -\theta && \phi && 1 \end{bmatrix} $$
+
+And hence, 
+
+$$ f_x  = \theta\ f_{th} $$
+$$ f_y = -\phi\ f_{th} $$
+}
+
+\section{Results}
+
+\frame{
+  \frametitle{Helical trajectory - error graphs}
+  \begin{figure}[H]
+    \begin{tabular}{cc}
+      \subfloat[Error]{\includegraphics[width=1.5in]{../Report/error4.jpg}} &
+                                                                  \subfloat[Orientation error]{\includegraphics[width=1.5in]{../Report/oerror4.jpg}} \\
+      \subfloat[Position error]{\includegraphics[width=1.5in]{../Report/perror4.jpg}} &
+                                                                            \subfloat[Velocity error]{\includegraphics[width=1.5in]{../Report/verror4.jpg}} \\
+    \end{tabular}
+  \end{figure} 
+}
+
+\frame{
+  \frametitle{Another goal - error graphs}
+  \begin{figure}[H]
+    \begin{tabular}{cc}
+      \subfloat[Error]{\includegraphics[width=1.5in]{../Report/error3.jpg}} &
+                                                                  \subfloat[Orientation error]{\includegraphics[width=1.5in]{../Report/oerror3.jpg}} \\
+      \subfloat[Position error]{\includegraphics[width=1.5in]{../Report/perror3.jpg}} &
+                                                                            \subfloat[Velocity error]{\includegraphics[width=1.5in]{../Report/verror3.jpg}} \\
+    \end{tabular}
+  \end{figure} 
+}
+
+\end{document}
 
 
