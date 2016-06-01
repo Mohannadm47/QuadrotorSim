@@ -1,0 +1,421 @@
+\documentclass[compress]{beamer}
+\usepackage{etex}
+\usetheme{Orebro}
+
+\newcommand{\lectureTitle}{{\rm \LaTeX{}} Template for Reading Assignment}
+
+%\addtolength{\bodyheight}{-2mm} 
+%If you think \bodyheight is too tall, you can adjust it like this.
+
+\definecolor{red}{rgb}{1,0,0}\newcommand{\red}{\color{red}}
+\definecolor{darkred}{rgb}{0.60,0.11,0.11}\newcommand{\darkred}{\color{darkred}}
+\definecolor{darkgreen}{rgb}{0.4,1.0,0.4}\newcommand{\darkgreen}{\color{darkgreen}}
+\definecolor{darkyellow}{rgb}{1.0,0.8,0.0}\newcommand{\darkyellow}{\color{darkyellow}}
+\definecolor{darkblueone}{rgb}{0.2,0.2,1.0}\newcommand{\darkblueone}{\color{darkblueone}}
+\definecolor{gray}{rgb}{0.8,0.8,0.8}\newcommand{\gray}{\color{gray}}
+\definecolor{darkgray}{rgb}{0.6,0.6,0.6}\newcommand{\darkgray}{\color{darkgray}}
+\definecolor{darkbluea}{rgb}{0.13,0.13,0.44}\newcommand{\darkbluea}{\color{OruBlue}}
+\definecolor{darkblue}{rgb}{0.18,0.23,0.53}\newcommand{\darkblue}{\color{darkblue}}
+\definecolor{white}{rgb}{1.0,1.0,1.0}\newcommand{\white}{\color{white}}
+\definecolor{black}{rgb}{0.0,0.0,0.0}\newcommand{\black}{\color{black}}
+\definecolor{ugreen}{rgb}{0.24,0.62,0.24}\newcommand{\ugreen}{\color{ugreen}}
+\definecolor{lgreen}{rgb}{0.88,0.91,0.88}\newcommand{\lgreen}{\color{lgreen}}
+\definecolor{ured}{rgb}{0.7,0.2,0.2}\newcommand{\ured}{\color{ured}}
+\definecolor{lred}{rgb}{0.85,0.6,0.6}\newcommand{\lred}{\color{lred}}
+\definecolor{reallylightblue}{HTML}{D4EAFF}\newcommand{\reallylightblue}{\color{reallylightblue}}
+\definecolor{lightgray}{HTML}{A7A7A7}\newcommand{\lightgray}{\color{lightgray}}
+\definecolor{orange}{HTML}{FF9700}\newcommand{\orange}{\color{orange}}
+\definecolor{mygray}{RGB}{185,220,255}\newcommand{\mygray}{\color{mygray}}
+
+\newcommand{\at}{\makeatletter @\makeatother}
+
+\newcommand{\mymovie}[3]{
+\begin{center}
+\movie[
+           width=#1\textwidth,
+           autostart
+%           poster,
+%           loop
+           ]
+           {
+             \centering
+             \hspace{-0.1cm}\includegraphics[width=#1\textwidth]{#2}
+           }
+          {#3}
+\end{center}
+}
+
+
+\newcommand{\mymovienocenter}[3]{
+\movie[
+           width=#1\textwidth,
+           autostart
+%           poster,
+%           loop
+           ]
+           {
+             \centering
+             \hspace{-0.1cm}\includegraphics[width=#1\textwidth]{#2}
+           }
+          {#3}
+}
+
+\newcommand{\OruBlue}{\color{OruBlue}}
+
+\newcommand{\changespace}[1]{\renewcommand{\baselinestretch}{#1}\normalsize}
+
+\usepackage{savesym}
+\usepackage{xcolor,colortbl}
+\usepackage{multimedia}
+%\usepackage{CJKutf8}
+\usepackage[english]{babel}
+%\usepackage{eurosans}
+%\usepackage{eurosym}
+\usepackage{alltt}
+\usepackage{calc}
+\usepackage{marvosym}
+\usepackage[ruled,vlined]{algorithm2e}
+\usepackage{pstricks}
+\usepackage[thicklines]{cancel}
+\usepackage{empheq}
+\usepackage[absolute,overlay]{textpos}
+
+\savesymbol{Cross}
+\usepackage{bbding}
+\restoresymbol{TXF}{Cross}
+
+\usepackage{tikz}
+% \usepackage[absolute,overlay]{textpos}
+% \textblockorigin{0mm}{0mm}
+
+\newcommand{\transboxnocenter}[2]{
+  \begin{center}
+    \fbox{
+      \begin{minipage}{#1\textwidth}\vspace{0.1cm}
+        #2 \vspace{0.1cm}
+      \end{minipage}
+    }
+  \end{center}
+}
+
+\newcommand{\transbox}[2]{
+  \begin{center}
+    \fbox{
+      \begin{minipage}{#1\textwidth}\vspace{0.1cm}
+        \centering #2 \vspace{0.1cm}
+      \end{minipage}
+    }
+  \end{center}
+}
+
+\newcommand{\nontransbox}[2]{
+  \begin{center}
+    \fcolorbox{black}{white}{
+      \begin{minipage}{#1\textwidth}\vspace{0.1cm}
+        \centering #2 \vspace{0.1cm}
+      \end{minipage}
+    }
+  \end{center}
+}
+
+
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\mbm}[1]{{\bf #1}}
+\newcommand{\dba}[1]{{\OruBlue{\bf #1}}}
+\newcommand{\dbb}[1]{{\OruBlue{\bf{\em #1}}}}
+\newcommand{\mybox}[2]{
+%
+	\begin{center}
+	%\vspace{-0.2cm}
+	\begin{tabular}{|c|}
+	\hline
+	\begin{minipage}{#1\textwidth}\vspace{0.3cm}
+	\centering
+	\emph{
+	#2
+	}
+	\vspace{0.3cm}\end{minipage}\\
+	\hline
+	\end{tabular}
+	%\vspace{-0.2cm}
+	\end{center}
+%
+}
+
+\newcommand{\graybox}[1]{
+\fboxrule=0pt
+\begin{center}
+\vspace{0.3cm}
+\noindent
+\fcolorbox{black}{mygray}{\parbox{0.94\columnwidth}{\vspace{0.3cm}
+\begin{minipage}{0.92\columnwidth}\centering
+#1
+\end{minipage}
+\vspace{0.3cm}
+}}
+\end{center}
+\vspace{0.3cm}
+}
+
+% gray box
+\newcommand{\gbox}[1]{
+  \begin{center}
+    \fcolorbox{black}{gray}{
+      \begin{minipage}[b]{0.98\textwidth}
+        \begin{center}
+          %\vspace{2mm}
+          \begin{minipage}{0.97\textwidth}
+            #1 
+          \end{minipage}
+          \vspace{2mm}
+        \end{center}
+      \end{minipage}
+    }
+  \end{center}
+}
+
+\newcommand{\wbox}[1]{
+  \begin{center}
+    \fcolorbox{black}{white}{
+      \begin{minipage}[b]{0.98\textwidth}
+        \begin{center}
+          %\vspace{2mm}
+          \begin{minipage}{0.97\textwidth}
+            #1 
+          \end{minipage}
+          \vspace{2mm}
+        \end{center}
+      \end{minipage}
+    }
+  \end{center}
+}
+
+\mode<presentation>
+{
+%\useoutertheme{infolines}
+\setbeamertemplate{footline}
+{
+  \hbox{%
+  \begin{beamercolorbox}[wd=.9\paperwidth,ht=2.25ex,dp=1ex,center]{title in foot}%
+  \usebeamerfont{title in foot}{\OruBlue\copyright{} 2016 \insertshortauthor{} / \"Orebro University -- \url{aass.oru.se}} \end{beamercolorbox}%
+\begin{beamercolorbox}[wd=.1\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}{\OruBlue\insertframenumber{} / \inserttotalframenumber\hspace*{2ex}}
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+}
+
+% ===========================================================================
+\title{Planning \& Scheduling, DT4047}
+\subtitle{\lectureTitle{}}
+\author[F.~Pecora]{Author Names\\\url{my@email.com, your@email.com}\\\vspace{0.2cm}School of Science and Technology\\\vspace{0.1cm}\"Orebro University, Sweden}
+
+\date{\centering
+\vspace{1cm}
+\includegraphics[height=45pt]{themeFig/Logo_txt_runt_farg-big.png}
+}
+
+
+%Optional extra graphics on the title page
+\titlegraphic{%
+  \colorbox{reallylightblue}{\parbox[t][\paperheight][c]{\linewidth}
+    {
+        %\vspace{1.3cm}
+        \begin{center}
+        \includegraphics[width=\linewidth]{fig/book.png}
+        \end{center}
+      %WITH FUNDER LOGO(S)
+      %WITH CONTRIBUTORS
+      % \vspace{0.3cm}
+      % {\OruBlue $^\star$}
+      % \begin{minipage}{0.9\linewidth}\changespace{0.6}
+      % \scalebox{.6}{{\OruBlue{\em Lecture in partial achievement}}}
+      % \scalebox{.6}{{\OruBlue{\em of Associate Professorship}}}
+      % %$\;$ \includegraphics[width=0.6\linewidth]{themeFig/kk_eng_colour_tif.png}
+      % \end{minipage}
+    }%
+  }%
+}
+
+% %Optional extra graphics on the title page
+% \titlegraphic{%
+% %  \colorbox{OruBlue}{\parbox[t][\paperheight][c]{\linewidth}
+%   \colorbox{reallylightblue}{\parbox[t][\paperheight][c]{\linewidth}
+%     {
+%       {\flushright
+%         \includegraphics[width=\linewidth]{newfig/tl-fragment.png}\\
+%       }
+%       \vspace{0.3cm}
+%       {\black \scalebox{.6}{$^\star$ {\em Contributors:}}}\\\vspace{-0.15cm}
+%       {\black $\;\;$ \scalebox{.6}{H.~Andreasson, M.~Cirillo, T.~Stoyanov}}%\\\vspace{-0.15cm}
+%     }%
+%   }%
+% }
+
+
+% ===========================================================================
+\begin{document}
+\maketitle
+
+%%%%%%%%%%%%%%%%%%
+%% Course intro %%
+%%%%%%%%%%%%%%%%%%
+
+\section{Reading Assignment}
+
+
+% \frame{\frametitle{Course Literature: Books}
+
+% \begin{tabular}{rl}
+% \begin{minipage}{0.08\textwidth}\includegraphics[width=\textwidth]{newfig/gnt-cover.jpg}\end{minipage} & \begin{minipage}{0.85\textwidth}{\footnotesize M.~Ghallab, D.~Nau and P.~Traverso. ``Automated Planning: Theory and Practice'', Elsevier, 2004}\end{minipage}\\
+% $\;\;$ & \\
+% \begin{minipage}{0.08\textwidth}\includegraphics[width=\textwidth]{newfig/slv-cover.jpg}\end{minipage} & \begin{minipage}{0.85\textwidth}{\footnotesize S.~LaValle. ``Planning Algorithms'', Cambridge university press, 2006}\end{minipage}\\
+% $\;\;$ & \\
+% \begin{minipage}{0.08\textwidth}\includegraphics[width=\textwidth]{newfig/rn-cover.jpg}\end{minipage} & \begin{minipage}{0.85\textwidth}{\darkgray{\footnotesize S.J.~Russell, P.~Norvig. ``Artificial Intelligence: a Modern Approach'' (third edition), Pearson Publishing, 2010}}\end{minipage}\\
+% $\;\;$ & \\
+% \begin{minipage}{0.08\textwidth}\includegraphics[width=\textwidth]{newfig/cp-cover.jpg}\end{minipage} & \begin{minipage}{0.85\textwidth}{\darkgray{\footnotesize R. Dechter. ``Constraint Processing'', Morgan Kaufmann, 2003}}\end{minipage}
+% \end{tabular}
+% }
+
+
+\frame{\frametitle{Reading Assignment --- Action Planning}
+
+Action planning
+\vspace{0.5cm}
+%\nocite{Korf:2010:AIS:1882723.1882745,gent-walsh-99-tech-rep,chaff-01,ks-96}
+%\nocite{blum-furst-gp,ks-96,bb-99,geffner-bonet-hsp,cestaOddiSmithJOH02,lavalle1998r,Likhachev:2009:PLD:1577179.1577184,Karaman.Frazzoli:IJRR11,pecora2012mission,fikes-nilsson-71-STRIPS,Hoffmann:2001:FPS:1622394.1622404}
+
+{\fontsize{6}{2}\selectfont
+
+\begin{thebibliography}{}
+
+\bibitem[Hoffmann and Nebel, 2001]{Hoffmann:2001:FPS:1622394.1622404}
+Hoffmann, J. and Nebel, B. (2001).
+\newblock The FF planning system: Fast plan generation through heuristic
+  search.
+\newblock {\em J. Artif. Int. Res.}, 14(1):253--302.
+
+\bibitem[Fikes and Nilsson, 1971]{fikes-nilsson-71-STRIPS}
+Fikes, R.~E. and Nilsson, N.~J. (1971).
+\newblock {STRIPS: A new approach to theorem proving in problem solving}.
+\newblock {\em {Artificial Intelligence}}, 2:189--208.
+
+\bibitem[Blum and Furst, 1997]{blum-furst-gp}
+Blum, A. and Furst, M. (1997).
+\newblock {Fast Planning Through Planning Graph Analysis}.
+\newblock {\em Artificial Intelligence}, pages 281--300.
+
+\bibitem[Bonet and Geffner, 2001]{geffner-bonet-hsp}
+Bonet, B. and Geffner, H. (2001).
+\newblock {Planning as heuristic search}.
+\newblock {\em Artificial Intelligence}, 129(1--2):5--33.
+
+% \bibitem[Kautz et~al., 1996]{ks-96}
+% Kautz, H., McAllester, D., and Selman, B. (1996).
+% \newblock {Encoding Plans in Propositional Logic}.
+% \newblock In {\em {Proceedings of the Fifth International Conference on
+%   Principles of Knowledge Representation and Reasoning (KR-96)}}.
+
+\bibitem[Kautz and Selman, 1999]{bb-99}
+Kautz, H. and Selman, B. (1999).
+\newblock {Unifying SAT-based and Graph-based Planning}.
+\newblock In {\em Proceedings of IJCAI-99}.
+
+\end{thebibliography}
+}
+
+}
+
+
+% \frame{\frametitle{Course Literature: Scientific Articles}
+
+% Motion planning
+% \vspace{0.5cm}
+
+% {\fontsize{6}{2}\selectfont
+
+% \begin{thebibliography}{}
+
+% \bibitem[Karaman and Frazzoli, 2011]{Karaman.Frazzoli:IJRR11}
+% Karaman, S. and Frazzoli, E. (2011).
+% \newblock Sampling-based algorithms for optimal motion planning.
+% \newblock {\em International Journal of Robotics Research}, 30(7):846--894.
+
+% \bibitem[LaValle, 1998]{lavalle1998r}
+% LaValle, S.~M. (1998).
+% \newblock {Rapidly-exploring random trees: A new tool for path planning}.
+% \newblock Technical report, Computer Science Dept., Iowa State University.
+
+% \bibitem[Likhachev and Ferguson, 2009]{Likhachev:2009:PLD:1577179.1577184}
+% Likhachev, M. and Ferguson, D. (2009).
+% \newblock Planning long dynamically feasible maneuvers for autonomous vehicles.
+% \newblock {\em Int. J. Rob. Res.}, 28(8):933--945.
+
+% \end{thebibliography}
+% }
+
+% }
+
+% \addtocounter{framenumber}{-1}
+% \frame{\frametitle{Course Literature: Scientific Articles}
+
+% Scheduling and its integration with planning
+% \vspace{0.5cm}
+
+% {\fontsize{6}{2}\selectfont
+
+% \begin{thebibliography}{}
+
+% \bibitem[Cesta et~al., 2002]{cestaOddiSmithJOH02}
+% Cesta, A., Oddi, A., and Smith, S.~F. (2002).
+% \newblock A constraint-based method for project scheduling with time windows.
+% \newblock {\em Journal of Heuristics}, 8(1):109--136.
+
+% \bibitem[Pecora et~al., 2012]{pecora2012mission}
+% Pecora, F., Cirillo, M., and Dimitrov, D. (2012).
+% \newblock On mission-dependent coordination of multiple vehicles under spatial
+%   and temporal constraints.
+% \newblock In {\em IEEE/RSJ International Conference on Intelligent Robots and
+%   Systems (IROS)}.
+
+% \end{thebibliography}
+% }
+
+% }
+
+\frame{
+\frametitle{Your Task}
+\begin{itemize}
+\item Read a paper, prepare a \dba{15 min presentation}
+\begin{itemize}
+\item present it at lecture on Wed Feb 24 \at 10:15--12:00 
+\item groups possible, maximum \dba{two people}
+\end{itemize}
+\item Select a paper from the list
+\begin{itemize}
+\item $[$Fikes and Nilsson, 1971$]$\\{\em Seminal paper on AI Planning (STRIPS)}\vspace{0.1cm}
+\item $[$Blum and Furst, 1997$]$\\{\em Seminal paper on Graphplan}\vspace{0.1cm}
+\item $[$Hoffmann and Nebel, 2001$]$\\{\em Using planning graphs in heuristic search}\vspace{0.1cm}
+\item $[$Bonet and Geffner, 2001$]$\\{\em Seminal paper on planning as heuristic search}\vspace{0.1cm}
+\item $[$Kautz and Selman, 1999$]$\\{\em Using SAT solvers for search in planning graphs}
+\end{itemize}
+\end{itemize}
+}
+
+\frame{
+\frametitle{Contents of Presentation}
+\begin{itemize}
+\item \dba{Motivation:} how is the work motivated and what high-level problem does it solve?
+\item \dba{Problem formulation:} state the problem solved by the approach in formal terms
+\item \dba{Key techniques:} state the essential features of the proposed algorithm --- focus on one or two key technical aspects of the proposed method
+\item \dba{Evaluation:} how is the proposed method evaluated? What metrics are used and why?
+\item \dba{Future work:} what open questions does the proposed technique/solution/method lead to?
+\item \dba{Paper quality:} comment on the quality of the paper --- is it well written, clearly organized, convincing, fun to read, \dots{}?
+\end{itemize}
+}
+
+
+\end{document}
+
+

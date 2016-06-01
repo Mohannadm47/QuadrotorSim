@@ -1,0 +1,147 @@
+\DeclareOptionBeamer{compress}{\beamer@compresstrue}
+\ProcessOptionsBeamer
+
+\mode<presentation>
+
+\useoutertheme%[footline=authorinstitutetitle,subsection=false]
+[footline=false,subsection=true]
+{miniframes}
+% {decoratedminiframes}
+% {compactminiframes}
+
+\usecolortheme{bluebird}
+% \usecolortheme{whale}
+% \usecolortheme{orchid}
+\useinnertheme{rectangles}
+
+\usenavigationsymbolstemplate{} % Remove navigation symbols
+
+\usefonttheme{structurebold} 
+\usefonttheme[stillsansseriflarge,stillsansserifsmall]{serif}
+
+\usebackgroundtemplate{
+  \includegraphics
+  [width=\paperwidth]
+  % {/home/martin/Bilder/loggor/ORU/bg-stripes1-bw}
+  {themeFig/oru-bg-stripes1}
+}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+% \renewcommand{\rmdefault}{psbj} %Sabon OSF
+\renewcommand{\rmdefault}{psbx} %Sabon 
+\renewcommand{\rmdefault}{ptg}  
+%\renewcommand{\mddefault}{b}    %Use bold text always [This destroys \emph{}!]
+\renewcommand{\sfdefault}{ptg}  %Trade Gothic
+% \usefonttheme{professionalfonts} 
+% \usepackage{mathfont}
+% \DeclareSymbolFont{liningfigs}{T1}{psbx}{m}{n}
+% \DeclareMathSymbol{0}{\mathalpha}{liningfigs}{"30}
+% \DeclareMathSymbol{1}{\mathalpha}{liningfigs}{"31}
+% \DeclareMathSymbol{2}{\mathalpha}{liningfigs}{"32}
+% \DeclareMathSymbol{3}{\mathalpha}{liningfigs}{"33}
+% \DeclareMathSymbol{4}{\mathalpha}{liningfigs}{"34}
+% \DeclareMathSymbol{5}{\mathalpha}{liningfigs}{"35}
+% \DeclareMathSymbol{6}{\mathalpha}{liningfigs}{"36}
+% \DeclareMathSymbol{7}{\mathalpha}{liningfigs}{"37}
+% \DeclareMathSymbol{8}{\mathalpha}{liningfigs}{"38}
+% \DeclareMathSymbol{9}{\mathalpha}{liningfigs}{"39}
+
+%%%%%%%%
+%%% Convenience width/height lengths
+
+\newenvironment{fullwidth}
+{\begin{narrow}{-8mm}{-8mm}}
+  {\end{narrow}}
+
+\newlength{\fulltextwidth}
+\setlength{\fulltextwidth}{\textwidth}
+\addtolength{\fulltextwidth}{16mm}
+
+\newlength{\bodyheight}
+\setlength{\bodyheight}{\textheight}
+\addtolength{\bodyheight}{-10mm}%{-15mm}
+
+%%%%%%%
+
+\renewcommand{\maketitle}{
+  {
+    \usebackgroundtemplate{
+      \includegraphics
+      [height=\paperheight]
+      % {/home/martin/Bilder/loggor/ORU/bg2}
+      {themeFig/oru-bg-stripes2}
+    }
+    %\ifbeamer@inframe\titlepage\else\frame{\titlepage}\fi
+    \frame[plain]{\titlepage}
+  }
+}
+
+\defbeamertemplate*{title page}{orebro}
+{
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      % \begin{block}{\inserttitleindicator}
+      \usebeamercolor[fg]{title}\usebeamerfont{title}\inserttitle\par
+      \vspace{1ex}%\vfill
+      \usebeamercolor[fg]{subtitle}\usebeamerfont{subtitle}\insertsubtitle
+      \\
+      % \end{block}
+      \vspace{2ex}%\vfill% 
+      \ifx\insertauthor\@empty
+      \else
+      % \begin{block}{\insertauthorindicator}
+      \usebeamercolor[fg]{author}\usebeamerfont{author}\insertauthor\par
+      % \end{block}
+      \fi
+      \ifx\insertinstitute\@empty
+      \else
+      % \begin{block}{\insertinstituteindicator}
+      \usebeamercolor[fg]{institute}\usebeamerfont{institute}\insertinstitute\par
+      % \end{block}
+      \fi
+      \ifx\insertdate\@empty
+      \else
+      % \begin{block}{\insertdateindicator}
+      \usebeamercolor[fg]{date}\usebeamerfont{date}\insertdate\par
+      % \end{block}
+      \fi      
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      {\usebeamercolor[fg]{titlegraphic}\inserttitlegraphic\par}
+    \end{column}
+  \end{columns}
+
+}
+
+\setbeamercolor{block title}{use=structure,fg=white,bg=structure.fg}
+\setbeamercolor{block title alerted}{use=alerted text,fg=white,bg=alerted text.fg}
+\setbeamercolor{block title example}{use=example text,fg=white,bg=example text.fg}
+
+\setbeamercolor{block body}{parent=normal text,use=block title,bg=block title.bg!20!bg}
+\setbeamercolor{block body alerted}{parent=normal text,use=block title alerted,bg=block title alerted.bg!20!bg}
+\setbeamercolor{block body example}{parent=normal text,use=block title example,bg=block title example.bg!20!bg}
+
+
+% \setbeamertemplate{background canvas}[vertical shading][bottom=black!15,top=black!0]
+% \setbeamertemplate{blocks}[rounded]%[shadow=true]
+
+\setbeamerfont{block title}{size={}}
+
+\mode
+<all>
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \newcommand{\fullframe}[3]{
+%   {
+%     \usebackgroundtemplate{\includegraphics
+%       % [width=\paperwidth]
+%       [height=\paperheight]
+%       {#1}}
+%     \begin{frame}[plain]
+%       \frametitle{#2} 
+%       #3 
+%     \end{frame}
+%   }
+% }
