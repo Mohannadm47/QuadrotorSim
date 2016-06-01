@@ -4,12 +4,14 @@
 \newcommand{\norm}[1]{\lVert#1\rVert}
 
 
-\usepackage[small,hang]{caption2}
+%\usepackage[small,hang]{caption2}
 \usepackage{graphicx}
 \usepackage{bbold}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{hyperref}
+\usepackage{subfig}
+\usepackage{float}
 \usepackage{pdfpages}
 \usepackage[          % set page and margin sizes
   a4paper,
@@ -366,6 +368,112 @@ This forms the final component of our Inverse Dynamics controller to
 track any given path.
 
 \section{Results}
+
+In order to evaluate the controller, some reference trajectories were
+generated and used with the controller. To generate some of these
+trajectories, the \texttt{poly3}\footnote{From the documentation:
+\textit{``Using 3rd order polynomial generate position, velocity and
+acceleration profiles that satisfy the initial and final position and
+velocity constraints.''}} function from bMSd simulator
+\cite{courseWeb} was used. In all cases except the helical trajectory, the initial and final
+velocities were taken to be zero. \\
+
+For each case, we plot the squared magnitude of 
+\begin{enumerate}
+\item Error vector.
+\item Orientation error.
+\item Position error.
+\item Velocity error.
+\end{enumerate}
+\newpage
+\textbf{Case 1:}
+\begin{itemize}
+\item Initial position: $(0,0,10)$
+\item Initial Orientation: $(0,0,0)$
+\item Final Position: $(10,10,15)$
+\item Final Orientation: $(0,0,0)$
+\end{itemize}
+
+\begin{figure}[H]
+\begin{tabular}{cc}
+\subfloat[Error]{\includegraphics[width=3in]{error1.jpg}} &
+\subfloat[Orientation error]{\includegraphics[width=3in]{oerror1.jpg}} \\
+\subfloat[Position error]{\includegraphics[width=3in]{perror1.jpg}} &
+\subfloat[Velocity error]{\includegraphics[width=3in]{verror1.jpg}} \\
+\end{tabular}
+\caption{Error plots for case 1 mentioned above}
+\label{case1}
+\end{figure}
+\newpage
+\textbf{Case 2:}
+\begin{itemize}
+\item Initial position: $(0,0,10)$
+\item Initial Orientation: $(\frac{\pi}{4},0,0)$
+\item Final Position: $(10,10,15)$
+\item Final Orientation: $(0,0,0)$
+\end{itemize}
+
+\begin{figure}[H]
+\begin{tabular}{cc}
+\subfloat[Error]{\includegraphics[width=3in]{error2.jpg}} &
+\subfloat[Orientation error]{\includegraphics[width=3in]{oerror2.jpg}} \\
+\subfloat[Position error]{\includegraphics[width=3in]{perror2.jpg}} &
+\subfloat[Velocity error]{\includegraphics[width=3in]{verror2.jpg}} \\
+\end{tabular}
+\caption{Error plots for case 2 mentioned above}
+\label{case2}
+\end{figure}
+\newpage
+\textbf{Case 3:}
+\begin{itemize}
+\item Initial position: \((0,0,10)\)
+\item Initial Orientation: $(\frac{\pi}{4},\frac{\pi}{4},0)$ 
+\item Final Position: $(10,10,15)$ 
+\item Final Orientation: $(0,0,0)$
+\end{itemize}
+
+\begin{figure}[H]
+\begin{tabular}{cc}
+\subfloat[Error]{\includegraphics[width=3in]{error3.jpg}} &
+\subfloat[Orientation error]{\includegraphics[width=3in]{oerror3.jpg}} \\
+\subfloat[Position error]{\includegraphics[width=3in]{perror3.jpg}} &
+\subfloat[Velocity error]{\includegraphics[width=3in]{verror3.jpg}} \\
+\end{tabular}
+\caption{Error plots for case 3 mentioned above}
+\label{case3}
+\end{figure}
+
+\textbf{Case 4:}\\
+Helical trajectory generated using.
+\begin{itemize}
+\item $ x = r cos(t) $
+\item $ y = r sin(t) $
+\item $ z = 0.1 * t $
+\item $ \dot{x} = -r sin(t) $
+\item $ \dot{y} = r cos(t) $
+\item $ \dot{z} = 0.1 $
+\item $ \ddot{x} = -r cos(t) $
+\item $ \ddot{y} = -r sin(t) $
+\item $ \ddot{z} = 0 $
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=4in]{path5.jpg}
+\caption{The reference and actual paths of the quadcoptor}
+\label{pathfig}
+\end{figure}
+
+\begin{figure}[H]
+\begin{tabular}{cc}
+\subfloat[Error]{\includegraphics[width=3in]{error5.jpg}} &
+\subfloat[Orientation error]{\includegraphics[width=3in]{oerror5.jpg}} \\
+\subfloat[Position error]{\includegraphics[width=3in]{perror5.jpg}} &
+\subfloat[Velocity error]{\includegraphics[width=3in]{verror5.jpg}} \\
+\end{tabular}
+\caption{Error plots for case 4 mentioned above}
+\label{case4}
+\end{figure}
 
 \section{Conclusion}
 
