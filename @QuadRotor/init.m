@@ -1,13 +1,15 @@
 function quadrotor = init(quadrotor)
 
-quadrotor.L = 0.2;
+L = 0.2;
+m = 2;
+quadrotor.L = L;
 quadrotor.b = 1;
 quadrotor.k = 1;
-quadrotor.I = eye(3)*2;
-quadrotor.m = 2;
+quadrotor.I = [2*L^2*m/5,0,0;0,2*L^2*m/5,0;0,0,4*L^2*m/5];
+quadrotor.m = m;
 quadrotor.g = 9.81;
 quadrotor.kd = 1;
-quadrotor.dt = 0.005;
+quadrotor.dt = 0.01;
 
 quadrotor.x = zeros(12,1);
 
