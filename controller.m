@@ -50,9 +50,9 @@ r = 10;
 tx = 1;%pi/8;
 t = times;
 
-p(:,1:3) = bsxfun(@plus,[cos(t*tx)*r;sin(t*tx)*r;1*t], quadrotor.x(1:3) - [0;0;r])' ;
-v(:,1:3) = [-tx*sin(t*tx)*r;tx*cos(t*tx)*r;0.1*ones(size(t))]';
-a(:,1:3) = [-tx^2*cos(t*tx)*r;-tx^2*sin(t*tx)*r;zeros(size(t))]';
+% p(:,1:3) = bsxfun(@plus,[cos(t*tx)*r;sin(t*tx)*r;1*t], quadrotor.x(1:3) - [0;0;r])' ;
+% v(:,1:3) = [-tx*sin(t*tx)*r;tx*cos(t*tx)*r;0.1*ones(size(t))]';
+% a(:,1:3) = [-tx^2*cos(t*tx)*r;-tx^2*sin(t*tx)*r;zeros(size(t))]';
 
 % p(:,1:3) = bsxfun(@plus,[0.1*t;cos(t*tx)*r;sin(t*tx)*r], quadrotor.x(1:3) - [0;r;0])' ;
 % v(:,1:3) = [0.1*ones(size(t));-tx*sin(t*tx)*r;tx*cos(t*tx)*r]';
@@ -98,7 +98,8 @@ for i = 1:length(times)
 	F = zeros(6,1);
 	
 	F(1:3) = M(1:3,1:3)*([error(1)*Kp2;error(2)*Kp2;error(3)*Kp] + [error_dot(1)*Kd2;error_dot(2)*Kd2;error_dot(3)*Kd] + G(1:3) + a(i,1:3)') + quadrotor.x(4:6)*quadrotor.kd;
-	F(3) = F(3)/(cos(current_theta(1))*cos(current_theta(2)));
+	%F(3) = F(3)/(cos(current_theta(1))*cos(current_theta(2)));
+	F(1:3) = inv(R)*F(1:3);
 	r_rotation = [-F(2),F(1),p(i,6)]./[F(3),F(3),1];
 	
 	error(4:6) = R_err(rotation(current_theta'), rotation(r_rotation));
